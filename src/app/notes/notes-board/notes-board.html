@@ -1,0 +1,71 @@
+<section class="notes-board">
+  <header class="notes-board__header">
+    <div class="notes-board__heading">
+      <span class="subtitle">My Notes</span>
+      <h2 class="title">Plan and organize your day</h2>
+    </div>
+
+    <div class="notes-board__filters" role="tablist" aria-label="Select note period">
+      @for (option of periodOptions; track option.value) {
+        <button
+          type="button"
+          class="filter-pill"
+          [class.filter-pill--active]="option.value === activePeriod"
+          (click)="periodChange.emit(option.value)"
+          role="tab"
+          [attr.aria-selected]="option.value === activePeriod"
+        >
+          {{ option.label }}
+          <span class="filter-pill__count">{{ option.count }}</span>
+        </button>
+      }
+    </div>
+  </header>
+
+  <div
+    class="notes-board__carousel-wrapper"
+    [class.notes-board__carousel-wrapper--scrollable]="isScrollable"
+  >
+    @if (isScrollable) {
+      <button
+        type="button"
+        class="notes-board__nav notes-board__nav--prev"
+        (click)="scroll('left')"
+        [disabled]="!canScrollLeft"
+        aria-label="Scroll notes left"
+      >
+        <span aria-hidden="true">‹</span>
+      </button>
+    }
+
+    <div
+      #carousel
+      class="notes-board__carousel"
+      role="list"
+      (scroll)="onCarouselScroll()"
+    >
+      @if (notes.length === 0) {
+        <div class="notes-board__empty">
+          <h3>No notes yet</h3>
+          <p>Create your first note to keep track of your ideas.</p>
+        </div>
+      } @else {
+        @for (note of notes; track note.id) {
+          <app-note-card role="listitem" [note]="note" />
+        }
+      }
+    </div>
+
+    @if (isScrollable) {
+      <button
+        type="button"
+        class="notes-board__nav notes-board__nav--next"
+        (click)="scroll('right')"
+        [disabled]="!canScrollRight"
+        aria-label="Scroll notes right"
+      >
+        <span aria-hidden="true">›</span>
+      </button>
+    }
+  </div>
+</section>

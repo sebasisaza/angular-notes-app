@@ -1,0 +1,118 @@
+.note-card {
+  position: relative;
+  min-width: 260px;
+  max-width: 280px;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-card);
+  background: var(--surface);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 46px rgba(72, 84, 134, 0.16);
+}
+
+.note-card--lavender {
+  background: var(--note-lavender);
+  border-color: rgba(142, 108, 255, 0.3);
+}
+
+.note-card--peach {
+  background: var(--note-peach);
+  border-color: rgba(255, 146, 95, 0.28);
+}
+
+.note-card--mint {
+  background: var(--note-mint);
+  border-color: rgba(134, 182, 103, 0.22);
+}
+
+.note-card--sunrise {
+  background: var(--note-sunrise);
+  border-color: rgba(244, 180, 81, 0.2);
+}
+
+.note-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.note-card__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.note-card__heading h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.note-card__heading span {
+  font-size: 0.875rem;
+  color: rgba(49, 51, 72, 0.7);
+}
+
+.note-card__action {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-card__action:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(87, 89, 120, 0.18);
+}
+
+.note-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.note-card__list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.note-card__bullet {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+

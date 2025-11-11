@@ -1,0 +1,113 @@
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    <div class="sidebar__logo">
+      <span>NA</span>
+    </div>
+    <div>
+      <p class="brand-title">Notes App</p>
+      <p class="brand-subtitle">Manage your notes</p>
+    </div>
+  </div>
+
+  <div class="sidebar__primary-actions">
+    <button type="button" class="sidebar__btn sidebar__btn--primary" (click)="createNote.emit()">
+      <span class="sidebar__btn-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" role="presentation">
+          <path
+            d="M12 5V19"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M5 12H19"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      Create Note
+      <kbd class="sidebar__shortcut">⌘ N</kbd>
+    </button>
+
+    <button type="button" class="sidebar__btn">
+      <span class="sidebar__btn-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" role="presentation">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" />
+          <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      Search
+      <kbd class="sidebar__shortcut">⌘ S</kbd>
+    </button>
+
+    <button type="button" class="sidebar__btn">
+      <span class="sidebar__btn-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" role="presentation">
+          <path
+            d="M5 7h14M5 12h14M5 17h14"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+      Archives
+      <kbd class="sidebar__shortcut">⌘ R</kbd>
+    </button>
+  </div>
+
+  <div class="sidebar__section">
+    <div class="sidebar__section-header">
+      <span>Recent notes</span>
+      <button type="button" class="sidebar__section-action" aria-label="View all notes">
+        →
+      </button>
+    </div>
+
+    <ul class="sidebar__list">
+      @if (recentNotes.length === 0) {
+        <li class="sidebar__list-item sidebar__list-item--empty">
+          No recent notes yet
+        </li>
+      } @else {
+        @for (note of recentNotes; track note.id) {
+          <li class="sidebar__list-item">
+            <span class="sidebar__list-bullet"></span>
+            <span class="sidebar__list-title">{{ note.title }}</span>
+          </li>
+        }
+      }
+    </ul>
+  </div>
+
+  <div class="sidebar__footer">
+    <button type="button" class="sidebar__secondary">
+      <span class="sidebar__footer-icon">?</span>
+      Help
+    </button>
+    <button type="button" class="sidebar__secondary">
+      <span class="sidebar__footer-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" role="presentation">
+          <path
+            d="M12 15L12 12"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <path
+            d="M12 8H12.01"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </span>
+      Settings
+    </button>
+  </div>
+</aside>

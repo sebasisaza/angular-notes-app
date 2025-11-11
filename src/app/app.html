@@ -1,0 +1,35 @@
+<div class="app-shell">
+  <app-sidebar
+    [recentNotes]="recentNotes()"
+    (createNote)="handleCreateNote()"
+  />
+
+  <main class="dashboard">
+    <div class="dashboard__top">
+      <div class="dashboard__breadcrumbs">
+        <span class="dot dot--active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="dashboard__avatar" aria-label="User avatar">
+        <span>MD</span>
+      </div>
+    </div>
+
+    <div class="dashboard__content">
+      <app-notes-board
+        [notes]="notes()"
+        [activePeriod]="activePeriod()"
+        [periodOptions]="periodOptions()"
+        (periodChange)="handlePeriodChange($event)"
+      />
+
+      <app-folders-board
+        [folders]="filteredFolders()"
+        [activeFilter]="activeFolderFilter()"
+        [filterOptions]="folderOptions()"
+        (filterChange)="handleFolderFilterChange($event)"
+      />
+    </div>
+  </main>
+</div>

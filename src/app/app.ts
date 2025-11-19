@@ -1,12 +1,14 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { SidebarComponent } from './layout/sidebar/sidebar';
 import { NotesBoardComponent } from './notes/notes-board/notes-board';
 import { FoldersBoardComponent } from './folders/folders-board/folders-board';
-import { FolderFilter, NotePeriod, NotesService } from './data/notes';
+import { CreateNoteModalComponent } from './modals/create-note-modal/create-note-modal';
+import { SearchModalComponent } from './modals/search-modal/search-modal';
+import { FolderFilter, Note, NotePeriod, NotesService } from './data/notes';
 
 @Component({
   selector: 'app-root',
-  imports: [SidebarComponent, NotesBoardComponent, FoldersBoardComponent],
+  imports: [SidebarComponent, NotesBoardComponent, FoldersBoardComponent, CreateNoteModalComponent, SearchModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -24,6 +26,9 @@ export class App {
   ];
 
   private readonly notesService = inject(NotesService);
+  
+  protected readonly createNoteModal = viewChild(CreateNoteModalComponent);
+  protected readonly searchModal = viewChild(SearchModalComponent);
 
   protected readonly activePeriod = signal<NotePeriod>('today');
   protected readonly activeFolderFilter = signal<FolderFilter>('all');
@@ -59,33 +64,37 @@ export class App {
   );
 
   protected handleCreateNote(): void {
-    const defaults = [
-      {
-        title: 'Daily Reflections',
-        timeLabel: '7:30 PM',
-        items: ['Highlight of the day', 'One thing I learned', 'Gratitude moment'],
-        period: 'today' as NotePeriod,
-        accent: 'mint' as const,
-      },
-      {
-        title: 'Weekend Prep',
-        timeLabel: 'Friday 5:00 PM',
-        items: ['Plan a hike route', 'Call the grandparents', 'Prep grocery list'],
-        period: 'thisWeek' as NotePeriod,
-        accent: 'peach' as const,
-      },
-      {
-        title: 'Reading List',
-        timeLabel: 'Anytime',
-        items: ['Finish blog draft', 'Review design notes', 'Sketch new hero layout'],
-        period: 'thisMonth' as NotePeriod,
-        accent: 'lavender' as const,
-      },
-    ];
+    const modal = this.createNoteModal();
+    if (modal) {
+      modal.open();
+    }
+  }
 
-    const suggestion = defaults[Math.floor(Math.random() * defaults.length)];
-    this.notesService.createNote(suggestion);
-    this.activePeriod.set(suggestion.period);
+  protected handleSearch(): void {
+    const modal = this.searchModal();
+    if (modal) {
+      modal.open();
+    }
+  }
+
+  protected handleEditNote(note: Note): void {
+    const modal = this.createNoteModal();
+    if (modal) {
+      modal.openForEdit(note);
+    }
+  }
+
+  protected handleNoteCreated(period: NotePeriod): void {
+    this.activePeriod.set(period);
+  }
+
+  protected handleNoteUpdated(period: NotePeriod): void {
+    this.activePeriod.set(period);
+  }
+
+  protected handleNoteSelected(note: Note): void {
+    // Switch to the period of the selected note
+    this.activePeriod.set(note.period);
   }
 
   protected handlePeriodChange(period: NotePeriod): void {

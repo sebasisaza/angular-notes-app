@@ -1,7 +1,28 @@
 <aside class="sidebar">
   <div class="sidebar__brand">
     <div class="sidebar__logo">
-      <span>NA</span>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" role="presentation">
+        <path
+          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M14 2v6h6"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M8 13h8M8 17h8M8 9h2"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
     </div>
     <div>
       <p class="brand-title">Notes App</p>
@@ -30,10 +51,9 @@
         </svg>
       </span>
       Create Note
-      <kbd class="sidebar__shortcut">⌘ N</kbd>
     </button>
 
-    <button type="button" class="sidebar__btn">
+    <button type="button" class="sidebar__btn" (click)="search.emit()">
       <span class="sidebar__btn-icon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" role="presentation">
           <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" />
@@ -41,23 +61,9 @@
         </svg>
       </span>
       Search
-      <kbd class="sidebar__shortcut">⌘ S</kbd>
     </button>
 
-    <button type="button" class="sidebar__btn">
-      <span class="sidebar__btn-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" role="presentation">
-          <path
-            d="M5 7h14M5 12h14M5 17h14"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-          />
-        </svg>
-      </span>
-      Archives
-      <kbd class="sidebar__shortcut">⌘ R</kbd>
-    </button>
+    
   </div>
 
   <div class="sidebar__section">
@@ -75,8 +81,8 @@
         </li>
       } @else {
         @for (note of recentNotes; track note.id) {
-          <li class="sidebar__list-item">
-            <span class="sidebar__list-bullet"></span>
+          <li class="sidebar__list-item" (click)="noteSelected.emit(note)">
+            <span class="sidebar__list-bullet" [ngClass]="'sidebar__list-bullet--' + note.accent"></span>
             <span class="sidebar__list-title">{{ note.title }}</span>
           </li>
         }

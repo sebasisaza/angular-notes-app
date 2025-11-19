@@ -35,6 +35,7 @@ export class NotesBoardComponent implements AfterViewInit, OnChanges, OnDestroy 
   @Input({ required: true }) activePeriod!: NotePeriod;
   @Input({ required: true }) periodOptions: PeriodOption[] = [];
   @Output() readonly periodChange = new EventEmitter<NotePeriod>();
+  @Output() readonly editNote = new EventEmitter<Note>();
 
   @ViewChild('carousel') private carouselRef?: ElementRef<HTMLDivElement>;
 

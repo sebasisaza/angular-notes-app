@@ -142,11 +142,17 @@
   padding: 0.4rem 0.6rem;
   border-radius: 12px;
   transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .sidebar__list-item:hover {
   background: rgba(202, 210, 248, 0.35);
   color: var(--text-primary);
+}
+
+.sidebar__list-item:active {
+  background: rgba(202, 210, 248, 0.45);
 }
 
 .sidebar__list-item--empty {
@@ -162,6 +168,27 @@
   border-radius: 50%;
   background: linear-gradient(135deg, #ffd27a, #ff9c4a);
   box-shadow: 0 4px 8px rgba(240, 164, 64, 0.45);
+  flex-shrink: 0;
+}
+
+.sidebar__list-bullet--lavender {
+  background: linear-gradient(135deg, #d8ccff, #b49cf8);
+  box-shadow: 0 4px 8px rgba(142, 108, 255, 0.45);
+}
+
+.sidebar__list-bullet--peach {
+  background: linear-gradient(135deg, #ffd7c5, #ffaf8a);
+  box-shadow: 0 4px 8px rgba(255, 146, 95, 0.45);
+}
+
+.sidebar__list-bullet--mint {
+  background: linear-gradient(135deg, #e6fac9, #aedf76);
+  box-shadow: 0 4px 8px rgba(134, 182, 103, 0.45);
+}
+
+.sidebar__list-bullet--sunrise {
+  background: linear-gradient(135deg, #ffe5b0, #ffc46a);
+  box-shadow: 0 4px 8px rgba(244, 180, 81, 0.45);
 }
 
 .sidebar__list-title {

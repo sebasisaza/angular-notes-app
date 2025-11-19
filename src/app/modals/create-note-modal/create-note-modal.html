@@ -1,0 +1,129 @@
+@if (isOpen()) {
+  <div class="modal__backdrop" (click)="handleBackdropClick($event)">
+    <div class="modal__container" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">{{ isEditMode() ? 'Edit Note' : 'Create New Note' }}</h2>
+        <button type="button" class="modal__close" (click)="closeModal()" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <form class="modal__form" (ngSubmit)="handleSubmit()">
+        <div class="form__group">
+          <label for="title" class="form__label">Title *</label>
+          <input
+            id="title"
+            type="text"
+            class="form__input"
+            [ngModel]="title()"
+            (ngModelChange)="title.set($event)"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter note title"
+            required
+          />
+        </div>
+
+        <div class="form__group">
+          <label for="timeLabel" class="form__label">Time Label</label>
+          <input
+            id="timeLabel"
+            type="text"
+            class="form__input"
+            [ngModel]="timeLabel()"
+            (ngModelChange)="timeLabel.set($event)"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="e.g., 8:00 PM"
+          />
+        </div>
+
+        <div class="form__row">
+          <div class="form__group">
+            <label for="period" class="form__label">Period</label>
+            <select
+              id="period"
+              class="form__select"
+              [ngModel]="period()"
+              (ngModelChange)="period.set($event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              @for (option of periodOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form__group">
+            <label class="form__label">Accent Color</label>
+            <div class="form__accent-group">
+              @for (option of accentOptions; track option.value) {
+                <button
+                  type="button"
+                  class="form__accent-btn"
+                  [class.form__accent-btn--active]="accent() === option.value"
+                  [style.background-color]="option.color"
+                  (click)="accent.set(option.value)"
+                  [attr.aria-label]="option.label"
+                >
+                  @if (accent() === option.value) {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <div class="form__label-row">
+            <label class="form__label">Items *</label>
+            <button type="button" class="form__add-btn" (click)="addItem()" aria-label="Add item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Add Item
+            </button>
+          </div>
+          <div class="form__items-list">
+            @for (item of items(); track $index) {
+              <div class="form__item-row">
+                <input
+                  type="text"
+                  class="form__input"
+                  [value]="item"
+                  (input)="updateItem($index, $any($event.target).value)"
+                  placeholder="Enter item text"
+                />
+                @if (items().length > 1) {
+                  <button
+                    type="button"
+                    class="form__remove-btn"
+                    (click)="removeItem($index)"
+                    aria-label="Remove item"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="modal__btn modal__btn--secondary" (click)="closeModal()">
+            Cancel
+          </button>
+          <button type="submit" class="modal__btn modal__btn--primary">
+            {{ isEditMode() ? 'Update Note' : 'Create Note' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+

@@ -51,7 +51,7 @@
         </div>
       } @else {
         @for (note of notes; track note.id) {
-          <app-note-card role="listitem" [note]="note" />
+          <app-note-card role="listitem" [note]="note" (editNote)="editNote.emit($event)" />
         }
       }
     </div>

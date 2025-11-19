@@ -1,0 +1,84 @@
+@if (isOpen()) {
+  <div class="modal__backdrop" (click)="handleBackdropClick($event)">
+    <div class="modal__container" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">Search Notes</h2>
+        <button type="button" class="modal__close" (click)="closeModal()" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__content">
+        <div class="search__input-wrapper">
+          <svg class="search__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" stroke-linecap="round" />
+          </svg>
+          <input
+            type="text"
+            class="search__input"
+            placeholder="Search by title, items, or time label..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            [ngModelOptions]="{ standalone: true }"
+            autofocus
+          />
+          @if (searchQuery().trim()) {
+            <button type="button" class="search__clear" (click)="clearSearch()" aria-label="Clear search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          }
+        </div>
+
+        <div class="search__results">
+          @if (!searchQuery().trim()) {
+            <div class="search__empty">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" stroke-linecap="round" />
+              </svg>
+              <p>Start typing to search notes...</p>
+            </div>
+          } @else if (searchResults().length === 0) {
+            <div class="search__empty">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" stroke-linecap="round" />
+              </svg>
+              <p>No notes found matching "{{ searchQuery() }}"</p>
+            </div>
+          } @else {
+            <div class="search__results-header">
+              <span class="search__count">{{ searchResults().length }} {{ searchResults().length === 1 ? 'note' : 'notes' }} found</span>
+            </div>
+            <div class="search__results-list">
+              @for (note of searchResults(); track note.id) {
+                <button type="button" class="search__result-item" (click)="selectNote(note)">
+                  <div class="search__result-header">
+                    <h3 class="search__result-title">{{ note.title }}</h3>
+                    <span class="search__result-time">{{ note.timeLabel }}</span>
+                  </div>
+                  @if (note.items.length > 0) {
+                    <ul class="search__result-items">
+                      @for (item of note.items.slice(0, 3); track $index) {
+                        <li class="search__result-item-text">{{ item }}</li>
+                      }
+                      @if (note.items.length > 3) {
+                        <li class="search__result-item-more">+{{ note.items.length - 3 }} more</li>
+                      }
+                    </ul>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+

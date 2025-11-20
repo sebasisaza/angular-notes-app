@@ -227,9 +227,16 @@
 .modal__actions {
   display: flex;
   gap: 0.75rem;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   padding-top: 1rem;
   border-top: 1px solid var(--border-soft);
+}
+
+.modal__actions-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
 .modal__btn {
@@ -260,6 +267,26 @@
     &:hover {
       box-shadow: 0 6px 16px rgba(27, 29, 41, 0.3);
       transform: translateY(-1px);
+    }
+  }
+
+  &.modal__btn--danger {
+    background: #fee2e2;
+    color: #dc2626;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+
+    &:hover {
+      background: #fecaca;
+      color: #b91c1c;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }

@@ -1,14 +1,13 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { SidebarComponent } from './layout/sidebar/sidebar';
 import { NotesBoardComponent } from './notes/notes-board/notes-board';
-import { FoldersBoardComponent } from './folders/folders-board/folders-board';
 import { CreateNoteModalComponent } from './modals/create-note-modal/create-note-modal';
 import { SearchModalComponent } from './modals/search-modal/search-modal';
-import { FolderFilter, Note, NotePeriod, NotesService } from './data/notes';
+import { Note, NotePeriod, NotesService } from './data/notes';
 
 @Component({
   selector: 'app-root',
-  imports: [SidebarComponent, NotesBoardComponent, FoldersBoardComponent, CreateNoteModalComponent, SearchModalComponent],
+  imports: [SidebarComponent, NotesBoardComponent, CreateNoteModalComponent, SearchModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -19,19 +18,12 @@ export class App {
     { label: 'Today', value: 'today' as NotePeriod }
   ];
 
-  private readonly folderDefinitions = [
-    { label: 'All', value: 'all' as FolderFilter },
-    { label: 'Recent', value: 'recent' as FolderFilter },
-    { label: 'Last modified', value: 'lastModified' as FolderFilter },
-  ];
-
   private readonly notesService = inject(NotesService);
   
   protected readonly createNoteModal = viewChild(CreateNoteModalComponent);
   protected readonly searchModal = viewChild(SearchModalComponent);
 
   protected readonly activePeriod = signal<NotePeriod>('today');
-  protected readonly activeFolderFilter = signal<FolderFilter>('all');
 
   protected readonly periodOptions = computed(() =>
     this.periodDefinitions.map((definition) => ({
@@ -40,27 +32,14 @@ export class App {
     }))
   );
 
-  protected readonly folderOptions = computed(() =>
-    this.folderDefinitions.map((definition) => ({
-      ...definition,
-      count: this.notesService.getFoldersByFilter(definition.value).length,
-    }))
-  );
-
   protected readonly notes = computed(() =>
     this.notesService.getNotesByPeriod(this.activePeriod())
   );
-
-  protected readonly folders = this.notesService.folders;
 
   protected readonly recentNotes = computed(() =>
     [...this.notesService.notes()].sort(
       (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     ).slice(0, 5)
-  );
-
-  protected readonly filteredFolders = computed(() =>
-    this.notesService.getFoldersByFilter(this.activeFolderFilter())
   );
 
   protected handleCreateNote(): void {
@@ -97,11 +76,23 @@ export class App {
     this.activePeriod.set(note.period);
   }
 
-  protected handlePeriodChange(period: NotePeriod): void {
-    this.activePeriod.set(period);
+  protected handleNoteDeleted(): void {
+    // Note deleted - view will automatically update via signals
+    // Optionally switch to default period if current period has no notes
+    const currentNotes = this.notes();
+    if (currentNotes.length === 0) {
+      // Switch to first period that has notes, or keep current
+      const periods: NotePeriod[] = ['today', 'thisWeek', 'thisMonth'];
+      const periodWithNotes = periods.find((period) => 
+        this.notesService.getNotesByPeriod(period).length > 0
+      );
+      if (periodWithNotes) {
+        this.activePeriod.set(periodWithNotes);
+      }
+    }
   }
 
-  protected handleFolderFilterChange(filter: FolderFilter): void {
-    this.activeFolderFilter.set(filter);
+  protected handlePeriodChange(period: NotePeriod): void {
+    this.activePeriod.set(period);
   }
 }

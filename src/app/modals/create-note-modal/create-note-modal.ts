@@ -17,6 +17,7 @@ export class CreateNoteModalComponent {
   @Output() readonly close = new EventEmitter<void>();
   @Output() readonly noteCreated = new EventEmitter<NotePeriod>();
   @Output() readonly noteUpdated = new EventEmitter<NotePeriod>();
+  @Output() readonly noteDeleted = new EventEmitter<void>();
 
   protected readonly isOpen = signal(false);
   protected readonly isEditMode = signal(false);
@@ -123,6 +124,15 @@ export class CreateNoteModalComponent {
     }
 
     this.closeModal();
+  }
+
+  protected handleDelete(): void {
+    const noteId = this.editingNoteId();
+    if (noteId && this.isEditMode()) {
+      this.notesService.deleteNote(noteId);
+      this.noteDeleted.emit();
+      this.closeModal();
+    }
   }
 
   private resetForm(): void {

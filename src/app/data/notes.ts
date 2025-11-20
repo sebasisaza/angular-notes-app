@@ -14,20 +14,8 @@ export interface Note {
   updatedAt: string;
 }
 
-export type FolderFilter = 'all' | 'recent' | 'lastModified';
-
-export interface Folder {
-  id: string;
-  name: string;
-  abbreviation: string;
-  accent: NoteAccent;
-  updatedAt: string;
-  isRecent?: boolean;
-}
-
 interface NotesState {
   notes: Note[];
-  folders: Folder[];
 }
 
 @Injectable({
@@ -40,7 +28,6 @@ export class NotesService {
   private readonly state = signal<NotesState>(this.loadState());
 
   readonly notes = computed(() => this.state().notes);
-  readonly folders = computed(() => this.state().folders);
 
   constructor() {
     effect(
@@ -57,21 +44,6 @@ export class NotesService {
 
   getNotesByPeriod(period: NotePeriod): Note[] {
     return this.notes().filter((note) => note.period === period);
-  }
-
-  getFoldersByFilter(filter: FolderFilter): Folder[] {
-    const folders = this.folders();
-    if (filter === 'all') {
-      return folders;
-    }
-
-    if (filter === 'recent') {
-      return folders.filter((folder) => folder.isRecent);
-    }
-
-    return [...folders].sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
   }
 
   createNote(payload: { title: string; timeLabel: string; items: string[]; period: NotePeriod; accent: NoteAccent }): void {
@@ -112,9 +84,10 @@ export class NotesService {
 
     if (stored) {
       try {
-        const parsed = JSON.parse(stored) as NotesState;
-        if (parsed.notes?.length && parsed.folders?.length) {
-          return parsed;
+        const parsed = JSON.parse(stored) as { notes?: Note[]; folders?: unknown };
+        if (parsed.notes && Array.isArray(parsed.notes) && parsed.notes.length > 0) {
+          // Return only notes, ignoring any folders in stored data
+          return { notes: parsed.notes };
         }
       } catch {
         // ignore parse errors and fall back to defaults
@@ -165,53 +138,6 @@ export class NotesService {
           items: ['Launch a monthly newsletter', 'Plan a team off-site', 'Explore UI animation concepts'],
           accent: 'peach',
           updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 72).toISOString(),
-        },
-      ],
-      folders: [
-        {
-          id: 'bucket-list',
-          name: 'Bucket List',
-          abbreviation: 'BL',
-          accent: 'sunrise',
-          updatedAt: now.toISOString(),
-          isRecent: true,
-        },
-        {
-          id: 'finances',
-          name: 'Finances',
-          abbreviation: 'Fi',
-          accent: 'sunrise',
-          updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 12).toISOString(),
-          isRecent: true,
-        },
-        {
-          id: 'travel',
-          name: 'Travel Plans',
-          abbreviation: 'TP',
-          accent: 'sunrise',
-          updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
-          isRecent: true,
-        },
-        {
-          id: 'shopping',
-          name: 'Shopping',
-          abbreviation: 'Sh',
-          accent: 'sunrise',
-          updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-        },
-        {
-          id: 'personal',
-          name: 'Personal',
-          abbreviation: 'Pe',
-          accent: 'sunrise',
-          updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 6).toISOString(),
-        },
-        {
-          id: 'work',
-          name: 'Work',
-          abbreviation: 'Wo',
-          accent: 'sunrise',
-          updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7).toISOString(),
         },
       ],
     };

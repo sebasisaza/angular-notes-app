@@ -29,19 +29,13 @@
         (periodChange)="handlePeriodChange($event)"
         (editNote)="handleEditNote($event)"
       />
-
-      <!-- <app-folders-board
-        [folders]="filteredFolders()"
-        [activeFilter]="activeFolderFilter()"
-        [filterOptions]="folderOptions()"
-        (filterChange)="handleFolderFilterChange($event)"
-      /> -->
     </div>
   </main>
 
   <app-create-note-modal 
     (noteCreated)="handleNoteCreated($event)"
     (noteUpdated)="handleNoteUpdated($event)"
+    (noteDeleted)="handleNoteDeleted()"
   />
 
   <app-search-modal
